@@ -2,16 +2,16 @@
   "name": "techpulse-media",
   "version": "1.0.0",
   "description": "TechPulse Media - Contact Form with Push Notifications",
-  "main": "api/contact.js",
-"scripts": {
-  "dev": "node ."
-},
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo \"No build step required\"",
+    "start": "echo \"No start script required\""
+  },
   "dependencies": {
-    "mongoose": "^8.18.2",
-    "nodemailer": "^6.9.7",
+    "mongoose": "^8.19.0",
+    "nodemailer": "^6.10.1",
     "web-push": "^3.6.7"
   },
-  "devDependencies": {},
   "keywords": [
     "contact-form",
     "push-notifications",
