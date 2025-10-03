@@ -1,6 +1,7 @@
 {
-  "name": "techpulse-media",
+  "name": "Techpulse-Media",
   "version": "1.0.0",
+  "type": "module",
   "description": "TechPulse Media - Contact Form with Push Notifications",
   "scripts": {
     "dev": "vercel dev",
@@ -24,3 +25,4 @@
     "node": "22.x"
   }
 }
+
