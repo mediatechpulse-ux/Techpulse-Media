@@ -1,5 +1,5 @@
 {
-  "name": "Techpulse-Media",
+  "name": "techpulse-media",
   "version": "1.0.0",
   "type": "module",
   "description": "TechPulse Media - Contact Form with Push Notifications",
@@ -13,6 +13,9 @@
     "nodemailer": "^6.10.1",
     "web-push": "^3.6.7"
   },
+  "engines": {
+    "node": "18.x || 20.x || 22.x"
+  },
   "keywords": [
     "contact-form",
     "push-notifications",
@@ -20,9 +23,5 @@
     "serverless"
   ],
   "author": "TechPulse Media",
-  "license": "MIT",
-  "engines": {
-    "node": "22.x"
-  }
+  "license": "MIT"
 }
-
