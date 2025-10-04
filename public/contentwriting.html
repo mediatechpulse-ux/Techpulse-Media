@@ -317,6 +317,98 @@ footer {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+  /* Ultra Small Screens (< 300px) */
+@media(max-width:299px) {
+  /* Navbar adjustments */
+  .navbar {
+    padding: 4px 8px;
+    min-height: 50px;
+  }
+  .navbar-brand img {
+    height: 30px;
+  }
+  .navbar-brand span {
+    font-size: 0.85rem;
+  }
+  .navbar-toggler {
+    padding: 2px 5px;
+    margin-left: 8px;
+  }
+  
+  /* Hero section fixes */
+  .hero {
+    margin-top: 15px; /* Increased space from navbar */
+    padding: 30px 8px 15px 8px;
+    border-radius: 8px;
+  }
+  .hero-text {
+    margin-bottom: 15px;
+  }
+  .hero-text h1 {
+    font-size: 1.4rem;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .hero-text p {
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+  }
+  .hero-text .cta-btn {
+    padding: 8px 18px;
+    font-size: 0.8rem;
+  }
+  .hero-img {
+    margin-top: 10px;
+  }
+  .hero-img img {
+    max-width: 180px;
+  }
+  
+  /* Services section */
+  .services {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin: 5px 5px;
+  }
+  .service-card {
+    padding: 12px 10px;
+  }
+  .service-card i {
+    font-size: 1.6rem;
+  }
+  .service-card h4 {
+    font-size: 0.9rem;
+  }
+  .service-card p {
+    font-size: 0.75rem;
+  }
+  
+  /* CTA section */
+  .cta-section-alt {
+    padding: 25px 8px;
+    margin: 5px 5px;
+    border-radius: 12px;
+  }
+  .cta-section-alt h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+  .cta-section-alt p {
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+  }
+  .cta-section-alt a {
+    padding: 8px 20px;
+    font-size: 0.8rem;
+  }
+  
+  /* Footer */
+  footer {
+    font-size: 0.7rem;
+    padding: 8px;
+    margin-top: 2px;
+  }
+}
 </style>
 </head>
 <body>
@@ -400,5 +492,6 @@ footer {
 </script>
 </body>
 </html>
+
 
 
