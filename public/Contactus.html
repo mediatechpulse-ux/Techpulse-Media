@@ -545,7 +545,7 @@ document.getElementById("contactForm").addEventListener("submit", async function
   const data = { name, email, service, budget, deadline, message };
 
   try {
-    const response = await fetch("/api/contact", {
+    const response = await fetch("./api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -738,4 +738,5 @@ function showToast(message, type = "info") {
 
 </body>
 </html>
+
 
