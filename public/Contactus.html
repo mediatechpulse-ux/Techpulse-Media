@@ -654,53 +654,71 @@ async function subscribeUser() {
     console.log('Service Worker is ready:', reg);
 
     // 2️⃣ Fetch VAPID key and check response
-    const response = await fetch('/api/vapidPublicKey');
-    if (!response.ok) throw new Error(`VAPID key fetch failed: ${response.status}`);
-    const vapidPublicKey = (await response.text()).trim();
-    console.log('VAPID public key received:', vapidPublicKey);
+    try {
+      const response = await fetch('/api/vapidPublicKey');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `VAPID key fetch failed: ${response.status}`);
+      }
+      const vapidPublicKey = (await response.text()).trim();
+      console.log('VAPID public key received:', vapidPublicKey);
 
-    // 3️⃣ Check existing subscription
-    const existingSubscription = await reg.pushManager.getSubscription();
-    if (existingSubscription) {
-      console.log('User already subscribed:', existingSubscription);
-      showToast("✅ Already subscribed to notifications!", "success");
-      return;
-    }
+      // 3️⃣ Check existing subscription
+      const existingSubscription = await reg.pushManager.getSubscription();
+      if (existingSubscription) {
+        console.log('User already subscribed:', existingSubscription);
+        showToast("✅ Already subscribed to notifications!", "success");
+        return;
+      }
 
-    // 4️⃣ Subscribe user
-    const subscription = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
-    });
-    console.log('Push subscription created:', subscription);
-
-    // 5️⃣ Send subscription to server
-    const subscribeResponse = await fetch('/api/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(subscription)
-    });
-    
-    if (!subscribeResponse.ok) throw new Error('Failed to send subscription to server');
-    console.log('Subscription saved on server');
-
-    showToast("✅ Successfully subscribed to notifications!", "success");
-    
-    // Show a test notification
-    setTimeout(() => {
-      reg.showNotification('Notifications Enabled!', {
-        body: 'You will now receive notifications from TechPulse Media',
-        icon: '/Assets/logo.png',
-        vibrate: [100, 50, 100]
+      // 4️⃣ Subscribe user
+      const subscription = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
       });
-    }, 1000);
+      console.log('Push subscription created:', subscription);
+
+      // 5️⃣ Send subscription to server
+      const subscribeResponse = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(subscription)
+      });
+      
+      if (!subscribeResponse.ok) throw new Error('Failed to send subscription to server');
+      console.log('Subscription saved on server');
+
+      showToast("✅ Successfully subscribed to notifications!", "success");
+      
+      // Show a test notification
+      setTimeout(() => {
+        reg.showNotification('Notifications Enabled!', {
+          body: 'You will now receive notifications from TechPulse Media',
+          icon: '/Assets/logo.png',
+          vibrate: [100, 50, 100]
+        });
+      }, 1000);
+    } catch (vapidError) {
+      console.error('VAPID key error:', vapidError);
+      showToast("⚠️ Notification service is temporarily unavailable. Please try again later.", "error");
+    }
     
   } catch (err) {
     console.error('Push subscription error:', err);
-    showToast("⚠️ Failed to subscribe to notifications: " + err.message, "error");
+    
+    // Provide a more user-friendly error message
+    let errorMessage = "Failed to subscribe to notifications";
+    if (err.message.includes('VAPID public key is not configured')) {
+      errorMessage = "Notification service is temporarily unavailable. Please try again later.";
+    } else if (err.message.includes('Notification permission denied')) {
+      errorMessage = "You've denied notification permissions. You can change this in your browser settings.";
+    }
+    
+    showToast("⚠️ " + errorMessage, "error");
   }
 }
 
+// Toast notification function
 function showToast(message, type = "info") {
   const toast = document.getElementById("toast");
   toast.innerText = message;
