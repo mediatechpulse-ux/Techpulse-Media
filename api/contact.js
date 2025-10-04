@@ -3,15 +3,6 @@ import nodemailer from "nodemailer";
 import webpush from "web-push";
 import crypto from "crypto";
 
-// Connect to MongoDB
-let connectionPromise = null;
-const getDbConnection = () => {
-  if (!connectionPromise) {
-    connectionPromise = mongoose.connect(process.env.MONGO_URI);
-  }
-  return connectionPromise;
-};
-
 // Define schemas
 const contactSchema = new mongoose.Schema({
   name: String, 
@@ -135,27 +126,6 @@ function analyzeContent(content) {
 
 // ===== SPAM PROTECTION ADDITIONS END HERE =====
 
-// Email transporter
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
-});
-
-// Web Push setup
-if (process.env.PUBLIC_VAPID_KEY && process.env.PRIVATE_VAPID_KEY) {
-  webpush.setVapidDetails(
-    'mailto:' + process.env.EMAIL_USER,
-    process.env.PUBLIC_VAPID_KEY,
-    process.env.PRIVATE_VAPID_KEY
-  );
-}
-
 // Main handler function
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -163,8 +133,23 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Check required environment variables
+    const requiredEnvVars = ['MONGO_URI', 'EMAIL_USER', 'EMAIL_PASSWORD'];
+    const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+    
+    if (missingEnvVars.length > 0) {
+      console.error('Missing environment variables:', missingEnvVars);
+      return res.status(500).json({ 
+        message: 'Server configuration error', 
+        missing: missingEnvVars 
+      });
+    }
+
     // Connect to database
-    await getDbConnection();
+    if (mongoose.connection.readyState !== 1) {
+      await mongoose.connect(process.env.MONGO_URI);
+      console.log('Connected to MongoDB');
+    }
 
     // ===== SPAM PROTECTION INTEGRATION STARTS HERE =====
     
@@ -237,7 +222,32 @@ export default async function handler(req, res) {
     });
     await newContact.save();
 
-    // Send email to site owner (existing code)
+    // Create email transporter
+    const transporter = nodemailer.createTransporter({
+      service: 'gmail',
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+
+    // Verify transporter configuration
+    await new Promise((resolve, reject) => {
+      transporter.verify((error, success) => {
+        if (error) {
+          console.error('Email transporter verification failed:', error);
+          reject(error);
+        } else {
+          console.log('Email transporter is ready');
+          resolve(success);
+        }
+      });
+    });
+
+    // Send email to site owner
     const ownerMailOptions = {
       from: `"TechPulse Contact Form" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
@@ -253,8 +263,9 @@ export default async function handler(req, res) {
     };
 
     await transporter.sendMail(ownerMailOptions);
+    console.log('Owner notification sent');
 
-    // NEW: Send verification email to user
+    // Send verification email to user
     const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
     const verificationLink = `${baseUrl}/verify?token=${verifyToken}`;
     
@@ -270,29 +281,76 @@ export default async function handler(req, res) {
     };
 
     await transporter.sendMail(userMailOptions);
+    console.log('User verification email sent');
 
-    // Send push notifications
-    const payload = JSON.stringify({
-      title: 'New Contact Form Submission',
-      body: `From: ${name} (${email})`
-    });
-
-    const subscriptions = await Subscription.find();
-    for (const subscription of subscriptions) {
+    // Send push notifications (if VAPID keys are configured)
+    if (process.env.PUBLIC_VAPID_KEY && process.env.PRIVATE_VAPID_KEY) {
       try {
-        await webpush.sendNotification(subscription, payload);
-      } catch (err) {
-        if (err.statusCode === 410) {
-          await Subscription.findByIdAndDelete(subscription._id);
+        webpush.setVapidDetails(
+          'mailto:' + process.env.EMAIL_USER,
+          process.env.PUBLIC_VAPID_KEY,
+          process.env.PRIVATE_VAPID_KEY
+        );
+        
+        const payload = JSON.stringify({
+          title: 'New Contact Form Submission',
+          body: `From: ${name} (${email})`
+        });
+
+        const subscriptions = await Subscription.find();
+        console.log(`Found ${subscriptions.length} push subscriptions`);
+        
+        for (const subscription of subscriptions) {
+          try {
+            await webpush.sendNotification(subscription, payload);
+            console.log('Push notification sent successfully');
+          } catch (err) {
+            console.error('Error sending push notification:', err);
+            if (err.statusCode === 410) {
+              console.log('Subscription expired, removing from database');
+              await Subscription.findByIdAndDelete(subscription._id);
+            }
+          }
         }
+      } catch (err) {
+        console.error('Push notification error:', err);
+        // Don't fail the whole request if push notifications fail
       }
+    } else {
+      console.log('VAPID keys not configured, skipping push notifications');
     }
 
     res.status(200).json({ 
       message: 'Form submitted successfully! Please check your email to verify your address.' 
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Contact form error:', err);
+    
+    // Provide more specific error message based on the error type
+    let errorMessage = 'Server error';
+    let statusCode = 500;
+    
+    if (err.name === 'MongoError') {
+      errorMessage = 'Database error';
+      if (err.message.includes('connection')) {
+        errorMessage = 'Database connection error';
+      }
+    } else if (err.name === 'ValidationError') {
+      errorMessage = 'Validation error: ' + err.message;
+      statusCode = 400;
+    } else if (err.code === 'EAUTH') {
+      errorMessage = 'Email authentication error';
+    } else if (err.code === 'ESOCKET') {
+      errorMessage = 'Email connection error';
+    } else if (err.message.includes('VAPID')) {
+      errorMessage = 'Push notification configuration error';
+    } else if (err.message.includes('ENOENT')) {
+      errorMessage = 'File or directory not found';
+    }
+    
+    res.status(statusCode).json({ 
+      message: errorMessage, 
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined 
+    });
   }
 }
