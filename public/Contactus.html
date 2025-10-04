@@ -543,46 +543,54 @@ document.getElementById("contactForm").addEventListener("submit", async function
   submitBtn.textContent = 'Sending...';
 
   const data = { name, email, service, budget, deadline, message };
-
-  try {
-    const response = await fetch("./api/contact", {
+try {
+    const response = await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
 
-    const result = await response.json();
-    if(response.ok){
-      showToast("✅ Message sent successfully!", "success");
-      this.reset();
+    // Check if response is ok before trying to parse JSON
+    if (!response.ok) {
+      // Try to get error message from response body
+      let errorMessage = "Server error occurred";
+      try {
+        const errorResponse = await response.json();
+        errorMessage = errorResponse.message || errorMessage;
+      } catch (e) {
+        console.error("Could not parse error response:", e);
+      }
       
-      // Trigger a test notification to verify it's working
-      setTimeout(() => {
-        if ('serviceWorker' in navigator && Notification.permission === 'granted') {
-          navigator.serviceWorker.ready.then(registration => {
-            registration.showNotification('Message Sent', {
-              body: 'Your message has been sent successfully!',
-              icon: '/Assets/logo.png',
-              vibrate: [100, 50, 100]
-            });
-          }).catch(err => {
-            console.error('Error showing notification:', err);
-          });
-        }
-      }, 1000);
-    } else {
-      showToast("⚠️ Error: " + result.message, "error");
+      throw new Error(`Server responded with ${response.status}: ${errorMessage}`);
     }
 
+    const result = await response.json();
+    showToast("✅ Message sent successfully!", "success");
+    this.reset();
+    
+    // Trigger a test notification to verify it's working
+    setTimeout(() => {
+      if ('serviceWorker' in navigator && Notification.permission === 'granted') {
+        navigator.serviceWorker.ready.then(registration => {
+          registration.showNotification('Message Sent', {
+            body: 'Your message has been sent successfully!',
+            icon: '/Assets/logo.png',
+            vibrate: [100, 50, 100]
+          });
+        }).catch(err => {
+          console.error('Error showing notification:', err);
+        });
+      }
+    }, 1000);
+
   } catch(err) {
-    console.error(err);
-    showToast("⚠️ Could not send message. Please try again later.", "error");
+    console.error("Contact form submission error:", err);
+    showToast(`⚠️ ${err.message || "Could not send message. Please try again later."}`, "error");
   } finally {
     // Re-enable submit button
     submitBtn.disabled = false;
     submitBtn.textContent = 'Send Message';
   }
-});
 
 // ----------- Service Worker & Push Notifications -----------
 
@@ -738,5 +746,6 @@ function showToast(message, type = "info") {
 
 </body>
 </html>
+
 
 
