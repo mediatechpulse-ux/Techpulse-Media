@@ -1,6 +1,7 @@
 {
   "name": "techpulse-media",
   "version": "1.0.0",
+    "type": "module",
   "description": "TechPulse Media - Contact Form with Push Notifications",
   "main": "index.js",
   "license": "MIT",
@@ -24,3 +25,4 @@
   ],
   "author": "TechPulse Media"
 }
+
