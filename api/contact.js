@@ -1,94 +1,298 @@
 import mongoose from "mongoose";
 import nodemailer from "nodemailer";
 import webpush from "web-push";
+import crypto from "crypto";
 
-// Configure VAPID keys
-webpush.setVapidDetails(
-  "mailto:anamtabatool611@gmail.com",
-  process.env.PUBLIC_VAPID_KEY,
-  process.env.PRIVATE_VAPID_KEY
-);
+// Connect to MongoDB
+let connectionPromise = null;
+const getDbConnection = () => {
+  if (!connectionPromise) {
+    connectionPromise = mongoose.connect(process.env.MONGO_URI);
+  }
+  return connectionPromise;
+};
 
 // Define schemas
 const contactSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  service: String,
-  budget: String,
-  deadline: String,
+  name: String, 
+  email: String, 
+  service: String, 
+  budget: String, 
+  deadline: String, 
   message: String,
-  verified: { type: Boolean, default: false },
-  verifyToken: String,
+  verified: { type: Boolean, default: false },   
+  verifyToken: String,                           
   createdAt: { type: Date, default: Date.now }
 });
+const Contact = mongoose.model('Contact', contactSchema);
 
 const subscriptionSchema = new mongoose.Schema({
-  endpoint: String,
-  keys: {
-    p256dh: String,
-    auth: String
+  endpoint: String, 
+  keys: { 
+    p256dh: String, 
+    auth: String 
   },
   createdAt: { type: Date, default: Date.now }
 });
+const Subscription = mongoose.model('Subscription', subscriptionSchema);
 
-// Models
-const Contact =
-  mongoose.models.Contact || mongoose.model("Contact", contactSchema);
-const Subscription =
-  mongoose.models.Subscription ||
-  mongoose.model("Subscription", subscriptionSchema);
+// ===== SPAM PROTECTION ADDITIONS START HERE =====
 
-// Cached DB connection
-let cached = global.mongoose;
-if (!cached) cached = global.mongoose = { conn: null, promise: null };
+// Define RateLimit schema
+const rateLimitSchema = new mongoose.Schema({
+  ip: String,
+  timestamp: { type: Date, default: Date.now, expires: 3600 } // Auto-delete after 1 hour
+});
+const RateLimit = mongoose.model('RateLimit', rateLimitSchema);
 
-async function connectDB() {
-  if (cached.conn) return cached.conn;
-  if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(process.env.MONGO_URI, { bufferCommands: false })
-      .then((m) => m);
-  }
-  cached.conn = await cached.promise;
-  return cached.conn;
+// Define Blacklist schema
+const blacklistSchema = new mongoose.Schema({
+  ip: String,
+  email: String,
+  reason: String,
+  timestamp: { type: Date, default: Date.now }
+});
+const Blacklist = mongoose.model('Blacklist', blacklistSchema);
+
+// List of disposable email domains
+const disposableEmailDomains = [
+  '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+  'throwaway.email', 'sharklasers.com', 'tempmail.org',
+  'yopmail.com', 'maildrop.cc', 'temp-mail.org',
+  'dispostable.com', 'getnada.com', 'instantemailaddress.com'
+];
+
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+const MAX_SUBMISSIONS_PER_WINDOW = 5;
+
+// Rate limiting check
+async function checkRateLimit(ip) {
+  const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW);
+  
+  // Count submissions from this IP in the time window
+  const count = await RateLimit.countDocuments({
+    ip,
+    timestamp: { $gte: windowStart }
+  });
+  
+  // Return true if rate limited
+  return count >= MAX_SUBMISSIONS_PER_WINDOW;
 }
 
-// ✅ Vercel handler
-export default async function handler(req, res) {
-  res.setHeader("Content-Type", "application/json");
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+// Blacklist check
+async function checkBlacklist(ip, email) {
+  // Check if IP or email is blacklisted
+  const isBlacklisted = await Blacklist.findOne({
+    $or: [
+      { ip },
+      { email }
+    ]
+  });
+  
+  return !!isBlacklisted; // Return true if blacklisted
+}
 
-  if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "POST")
-    return res.status(405).json({ error: "Method not allowed" });
+// Email validation
+function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+// Email domain validation
+function validateEmailDomain(email) {
+  if (!email || !email.includes('@')) return false;
+  
+  const domain = email.split('@')[1].toLowerCase();
+  return !disposableEmailDomains.includes(domain);
+}
+
+// Content analysis
+function analyzeContent(content) {
+  // List of spam keywords
+  const spamKeywords = [
+    'viagra', 'casino', 'lottery', 'winner', 'free money',
+    'click here', 'limited time', 'act now', 'congratulations',
+    'urgent', 'offer', 'discount', 'deal', 'promotion'
+  ];
+  
+  const lowerContent = content.toLowerCase();
+  
+  // Check for spam keywords
+  const hasSpamKeywords = spamKeywords.some(keyword => lowerContent.includes(keyword));
+  
+  // Check for excessive links (more than 2)
+  const linkRegex = /https?:\/\/[^\s]+/g;
+  const links = lowerContent.match(linkRegex) || [];
+  const hasExcessiveLinks = links.length > 2;
+  
+  // Check for excessive capitalization (more than 50% caps)
+  const capsRatio = (content.match(/[A-Z]/g) || []).length / content.length;
+  const hasExcessiveCaps = capsRatio > 0.5;
+  
+  return hasSpamKeywords || hasExcessiveLinks || hasExcessiveCaps;
+}
+
+// ===== SPAM PROTECTION ADDITIONS END HERE =====
+
+// Email transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
+
+// Web Push setup
+if (process.env.PUBLIC_VAPID_KEY && process.env.PRIVATE_VAPID_KEY) {
+  webpush.setVapidDetails(
+    'mailto:' + process.env.EMAIL_USER,
+    process.env.PUBLIC_VAPID_KEY,
+    process.env.PRIVATE_VAPID_KEY
+  );
+}
+
+// Main handler function
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
   try {
-    if (!process.env.MONGO_URI) {
-      return res.status(500).json({ error: "Database configuration missing" });
-    }
+    // Connect to database
+    await getDbConnection();
 
-    await connectDB();
-
+    // ===== SPAM PROTECTION INTEGRATION STARTS HERE =====
+    
+    // Get client IP
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    
     const { name, email, service, budget, deadline, message } = req.body;
+    
+    // Basic validation
     if (!name || !email || !message) {
-      return res.status(400).json({ error: "Missing required fields" });
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+    
+    // Check blacklist
+    const isBlacklisted = await checkBlacklist(ip, email);
+    if (isBlacklisted) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    
+    // Check rate limit
+    const isRateLimited = await checkRateLimit(ip);
+    if (isRateLimited) {
+      return res.status(429).json({ message: 'Too many requests' });
+    }
+    
+    // Validate email format
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: 'Invalid email format' });
+    }
+    
+    // Validate email domain
+    if (!validateEmailDomain(email)) {
+      return res.status(400).json({ message: 'Disposable email domains are not allowed' });
+    }
+    
+    // Content analysis
+    if (analyzeContent(message)) {
+      // Add to blacklist
+      await Blacklist.create({
+        ip,
+        email,
+        reason: 'Spam content',
+        timestamp: new Date()
+      });
+      
+      return res.status(400).json({ message: 'Your message was flagged as spam' });
+    }
+    
+    // If all checks pass, record the submission for rate limiting
+    await RateLimit.create({
+      ip,
+      timestamp: new Date()
+    });
+    
+    // ===== SPAM PROTECTION INTEGRATION ENDS HERE =====
+
+    // Generate verification token
+    const verifyToken = crypto.randomBytes(20).toString('hex');
+    
+    // Save to database with verification token
+    const newContact = new Contact({ 
+      name, 
+      email, 
+      service, 
+      budget, 
+      deadline, 
+      message,
+      verified: false,
+      verifyToken
+    });
+    await newContact.save();
+
+    // Send email to site owner (existing code)
+    const ownerMailOptions = {
+      from: `"TechPulse Contact Form" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      subject: 'New Contact Form Submission',
+      html: `<h3>New Contact Form Submission</h3>
+             <p><strong>Name:</strong> ${name}</p>
+             <p><strong>Email:</strong> ${email}</p>
+             <p><strong>Service:</strong> ${service}</p>
+             <p><strong>Budget:</strong> ${budget}</p>
+             <p><strong>Deadline:</strong> ${deadline}</p>
+             <p><strong>Message:</strong><br>${message}</p>
+             <p><strong>Status:</strong> Awaiting email verification</p>`
+    };
+
+    await transporter.sendMail(ownerMailOptions);
+
+    // NEW: Send verification email to user
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    const verificationLink = `${baseUrl}/verify?token=${verifyToken}`;
+    
+    const userMailOptions = {
+      from: `"TechPulse Media" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'Verify Your Email Address',
+      html: `<h2>Hello ${name},</h2>
+             <p>Thank you for contacting TechPulse Media. Please verify your email address by clicking the link below:</p>
+             <p><a href="${verificationLink}" style="background-color: #f26e1d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a></p>
+             <p>If you didn't request this, please ignore this email.</p>
+             <p>Best regards,<br>TechPulse Media Team</p>`
+    };
+
+    await transporter.sendMail(userMailOptions);
+
+    // Send push notifications
+    const payload = JSON.stringify({
+      title: 'New Contact Form Submission',
+      body: `From: ${name} (${email})`
+    });
+
+    const subscriptions = await Subscription.find();
+    for (const subscription of subscriptions) {
+      try {
+        await webpush.sendNotification(subscription, payload);
+      } catch (err) {
+        if (err.statusCode === 410) {
+          await Subscription.findByIdAndDelete(subscription._id);
+        }
+      }
     }
 
-    const contact = new Contact({ name, email, service, budget, deadline, message });
-    await contact.save();
-
-    // email + push notification code stays same...
-    return res.status(200).json({
-      success: true,
-      message: "Contact form submitted successfully"
+    res.status(200).json({ 
+      message: 'Form submitted successfully! Please check your email to verify your address.' 
     });
-  } catch (error) {
-    console.error("Contact form error:", error);
-    return res.status(500).json({
-      error: "Failed to submit form",
-      details: error.message
-    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 }
