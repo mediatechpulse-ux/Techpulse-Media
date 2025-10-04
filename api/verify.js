@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // MongoDB connection
 let cached = global.mongoose;
@@ -43,7 +43,7 @@ const contactSchema = new mongoose.Schema({
 
 const Contact = mongoose.models.Contact || mongoose.model('Contact', contactSchema);
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method not allowed" });
   }
