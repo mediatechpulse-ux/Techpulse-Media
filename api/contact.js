@@ -291,9 +291,8 @@ export default async function handler(req, res) {
     console.log('Owner notification sent');
 
     // Send verification email to user
-    const baseUrl = process.env.BASE_URL || 'https://techpulse-media.vercel.app';
-    const verificationLink = `${baseUrl}/verify?token=${verifyToken}`;
-    
+const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+const verificationLink = `${baseUrl}/api/verify?token=${verifyToken}`;    
     const userMailOptions = {
       from: `"TechPulse Media" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -381,5 +380,6 @@ export default async function handler(req, res) {
     });
   }
 }
+
 
 
