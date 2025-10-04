@@ -250,16 +250,14 @@ export default async function handler(req, res) {
     await newContact.save();
 
     // Create email transporter
-    const transporter = nodemailer.createTransporter({
-      service: 'gmail',
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
+  const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
+
 
     // Verify transporter configuration
     await new Promise((resolve, reject) => {
@@ -383,3 +381,4 @@ export default async function handler(req, res) {
     });
   }
 }
+
