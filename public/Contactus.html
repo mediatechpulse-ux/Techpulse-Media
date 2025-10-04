@@ -153,6 +153,29 @@ html { scroll-behavior:smooth; }
   opacity: 1;
 }
 
+/* Honeypot fields (hidden from humans) */
+.honeypot {
+  position: absolute;
+  left: -5000px;
+  top: -5000px;
+  visibility: hidden;
+}
+
+/* Character counter */
+.char-counter {
+  font-size: 12px;
+  color: #aaa;
+  text-align: right;
+  margin-top: 5px;
+}
+
+/* Error message styling */
+.error-message {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: 5px;
+  display: none;
+}
 
 /* Dropdown arrow */
 .contact-form .form-group.select-wrapper { position:relative; }
@@ -169,6 +192,11 @@ html { scroll-behavior:smooth; }
   border-radius:50px; font-weight:600; cursor:pointer; transition:0.3s; width:100%;
 }
 .contact-form button:hover { background:#e65a00; transform:translateY(-3px); box-shadow:0 10px 25px rgba(0,0,0,0.3); }
+.contact-form button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+}
 
 /* Success Message */
 .success-message { display:none; margin-top:20px; padding:15px; border-radius:12px; background:rgba(66,198,202,0.2); color:var(--highlight); font-weight:600; text-align:center; opacity:0; transition:opacity 0.5s ease-in-out; }
@@ -301,10 +329,34 @@ footer { background:var(--secondary); text-align:center; padding:20px; color:whi
             <option>Other</option>
           </select>
         </div>
-        <div class="form-group"><label for="budget">Estimated Budget</label><input type="text" id="budget" name="budget"></div>
-        <div class="form-group"><label for="deadline">Timeline / Deadline</label><input type="text" id="deadline" name="deadline"></div>
-        <div class="form-group"><label for="message">Message</label><textarea id="message" name="message" required></textarea></div>
-        <button type="submit">Send Message</button>
+        <div class="form-group"><label for="budget">Estimated Budget</label><input type="text" id="budget" name="budget" placeholder="e.g., $500 - $1000" required></div>
+        <div class="form-group"><label for="deadline">Timeline / Deadline</label><input type="text" id="deadline" name="deadline" placeholder="e.g., 2 weeks, 1 month, etc." required></div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required maxlength="500"></textarea>
+          <div class="char-counter"><span id="charCount">0</span>/500 characters</div>
+        </div>
+        
+        <!-- Honeypot fields for spam protection -->
+        <div class="honeypot">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        
+        <div class="honeypot">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" tabindex="-1" autocomplete="off">
+        </div>
+        
+        <div class="honeypot">
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+        </div>
+        
+        <!-- Hidden timestamp field -->
+        <input type="hidden" id="formLoadTime" name="formLoadTime">
+        
+        <button type="submit" id="submitBtn">Send Message</button>
       </form>
       <div id="successMessage" class="success-message">✅ Thank you! Your message has been sent.</div>
     </div>
@@ -334,6 +386,37 @@ footer { background:var(--secondary); text-align:center; padding:20px; color:whi
 <script>
 AOS.init({ duration: 1000 });
 
+// Set form load timestamp when page loads
+document.getElementById('formLoadTime').value = Date.now();
+
+// Character counter for message field
+const messageField = document.getElementById('message');
+const charCount = document.getElementById('charCount');
+
+messageField.addEventListener('input', function() {
+  const remaining = 500 - this.value.length;
+  charCount.textContent = this.value.length;
+  
+  if (remaining < 0) {
+    charCount.style.color = '#ff6b6b';
+  } else if (remaining < 50) {
+    charCount.style.color = '#f26e1d';
+  } else {
+    charCount.style.color = '#aaa';
+  }
+});
+
+// Budget validation - only allow currency formats and numbers
+document.getElementById('budget').addEventListener('input', function() {
+  this.value = this.value.replace(/[^0-9$,-\s.]/g, '');
+});
+
+// Deadline validation - only allow time-related words and numbers
+document.getElementById('deadline').addEventListener('input', function() {
+  // Allow numbers, time-related words, and common separators
+  this.value = this.value.replace(/[^0-9a-zA-Z\s\-\+]/g, '');
+});
+
 // Contact form submission
 document.getElementById("contactForm").addEventListener("submit", async function(e){
   e.preventDefault();
@@ -345,61 +428,203 @@ document.getElementById("contactForm").addEventListener("submit", async function
   let budget = document.getElementById("budget").value.trim();
   let deadline = document.getElementById("deadline").value.trim();
   let message = document.getElementById("message").value.trim();
+  
+  // Get honeypot values
+  let website = document.getElementById("website").value.trim();
+  let phone = document.getElementById("phone").value.trim();
+  let company = document.getElementById("company").value.trim();
+  
+  // Get form load time
+  let formLoadTime = parseInt(document.getElementById('formLoadTime').value);
+  let currentTime = Date.now();
+  let timeSpent = currentTime - formLoadTime;
 
   // Validation
-if(name === "" || email === "" || service === "" || message === ""){
-  showToast("⚠️ Please fill all required fields.", "error"); 
-  return;
-}
-if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-  showToast("⚠️ Please enter a valid email address.", "error"); 
-  return;
-}
+  if(name === "" || email === "" || service === "" || budget === "" || deadline === "" || message === ""){
+    showToast("⚠️ Please fill all required fields.", "error"); 
+    return;
+  }
+  
+  if(name.length < 2 || name.length > 50){
+    showToast("⚠️ Name must be between 2 and 50 characters.", "error");
+    return;
+  }
+  
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    showToast("⚠️ Please enter a valid email address.", "error"); 
+    return;
+  }
+  
+  if(message.length < 10 || message.length > 500){
+    showToast("⚠️ Message must be between 10 and 500 characters.", "error");
+    return;
+  }
+  
+  // Budget format validation
+  if(!/^\$?[\d,]+(\s*-\s*\$?[\d,]+)?$/.test(budget) && !/^\d+(\s*-\s*\d+)?$/.test(budget)){
+    showToast("⚠️ Please enter a valid budget range (e.g., $500-$1000 or 500-1000)", "error");
+    return;
+  }
+  
+  // Deadline format validation
+  if(!/^\d+\s*(days?|weeks?|months?|years?)$/i.test(deadline) && !/^\d+\s*-\s*\d+\s*(days?|weeks?|months?|years?)$/i.test(deadline)){
+    showToast("⚠️ Please enter a valid timeline (e.g., 2 weeks or 1-2 months)", "error");
+    return;
+  }
+
+  // Honeypot checks - if any honeypot field is filled, it's likely spam
+  if(website !== "" || phone !== "" || company !== ""){
+    console.log("Honeypot fields filled, likely spam submission");
+    showToast("✅ Thank you! Your message has been sent.", "success");
+    this.reset();
+    return;
+  }
+
+  // Time-based validation - if form submitted too quickly, likely a bot
+  if(timeSpent < 3000) { // Less than 3 seconds
+    console.log("Form submitted too quickly, likely spam:", timeSpent + "ms");
+    showToast("✅ Thank you! Your message has been sent.", "success");
+    this.reset();
+    return;
+  }
+
+  // Content-based spam detection
+  const spamKeywords = [
+    'http://', 'https://', 'www.', '.com', '.net', '.org',
+    'viagra', 'casino', 'lottery', 'winner', 'congratulations',
+    'click here', 'free money', 'make money', 'work from home',
+    'seo', 'backlink', 'guest post', 'link exchange'
+  ];
+  
+  const messageLower = message.toLowerCase();
+  let spamScore = 0;
+  
+  spamKeywords.forEach(keyword => {
+    if(messageLower.includes(keyword)) {
+      spamScore++;
+    }
+  });
+  
+  // Check for excessive capitalization
+  const capitalRatio = (message.match(/[A-Z]/g) || []).length / message.length;
+  if(capitalRatio > 0.5) {
+    spamScore += 2;
+  }
+  
+  // Check for excessive punctuation
+  const punctuationRatio = (message.match(/[!?.]/g) || []).length / message.length;
+  if(punctuationRatio > 0.1) {
+    spamScore += 2;
+  }
+  
+  // Check for repeated words
+  const words = messageLower.split(/\s+/);
+  const wordCounts = {};
+  words.forEach(word => {
+    wordCounts[word] = (wordCounts[word] || 0) + 1;
+  });
+  
+  Object.values(wordCounts).forEach(count => {
+    if(count > 3) {
+      spamScore++;
+    }
+  });
+  
+  if(spamScore >= 3) {
+    console.log("Spam content detected, score:", spamScore);
+    showToast("✅ Thank you! Your message has been sent.", "success");
+    this.reset();
+    return;
+  }
+
+  // Disable submit button to prevent multiple submissions
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
 
   const data = { name, email, service, budget, deadline, message };
 
   try {
-    const response = await fetch("http://localhost:3000/contact", {
+    const response = await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
 
     const result = await response.json();
-if(response.ok){
-  showToast("✅ Message sent successfully!", "success");
-  this.reset();
-} else {
-  showToast("⚠️ Error: " + result.message, "error");
-}
+    if(response.ok){
+      showToast("✅ Message sent successfully!", "success");
+      this.reset();
+      
+      // Trigger a test notification to verify it's working
+      setTimeout(() => {
+        if ('serviceWorker' in navigator && Notification.permission === 'granted') {
+          navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification('Message Sent', {
+              body: 'Your message has been sent successfully!',
+              icon: '/Assets/logo.png',
+              vibrate: [100, 50, 100]
+            });
+          }).catch(err => {
+            console.error('Error showing notification:', err);
+          });
+        }
+      }, 1000);
+    } else {
+      showToast("⚠️ Error: " + result.message, "error");
+    }
 
   } catch(err) {
     console.error(err);
     showToast("⚠️ Could not send message. Please try again later.", "error");
+  } finally {
+    // Re-enable submit button
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send Message';
   }
 });
 
 // ----------- Service Worker & Push Notifications -----------
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js')
+  navigator.serviceWorker.register('/sw.js')
     .then(reg => {
-      console.log('Service Worker registered');
+      console.log('Service Worker registered with scope:', reg.scope);
+      
+      // Check for updates
+      reg.addEventListener('updatefound', () => {
+        const installingWorker = reg.installing;
+        installingWorker.addEventListener('statechange', () => {
+          if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('New service worker available');
+            showToast('🔄 New version available! Refresh to update.', 'info');
+          }
+        });
+      });
+      
       return Notification.requestPermission();
     })
     .then(permission => {
+      console.log('Notification permission:', permission);
       if (permission !== 'granted') {
-        showToast("⚠️ You will not receive notifications!", "error");
+        showToast("⚠️ Notification permission denied. You won't receive notifications.", "error");
       } else {
-        subscribeUser();
+        // Wait a bit for service worker to be ready, then subscribe
+        setTimeout(() => {
+          subscribeUser();
+        }, 1000);
       }
     })
-    .catch(err => console.error('Service Worker registration failed:', err));
+    .catch(err => {
+      console.error('Service Worker registration failed:', err);
+      showToast("⚠️ Service Worker registration failed: " + err.message, "error");
+    });
+} else {
+  console.warn('Service Workers are not supported in this browser');
+  showToast("⚠️ Your browser doesn't support push notifications", "error");
 }
 
 // Convert VAPID public key
-// Helper to convert base64 public key to Uint8Array
-// Convert URL-safe Base64 string to Uint8Array
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -413,32 +638,66 @@ function urlBase64ToUint8Array(base64String) {
 
 async function subscribeUser() {
   try {
+    console.log('Starting push notification subscription...');
+    
+    // Check notification permission first
+    if (Notification.permission !== 'granted') {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        throw new Error('Notification permission denied');
+      }
+    }
+
     // 1️⃣ Ensure Service Worker is ready
     const reg = await navigator.serviceWorker.ready;
-    if (!reg) throw new Error("Service Worker not ready");  // <-- added here
+    if (!reg) throw new Error("Service Worker not ready");
+    console.log('Service Worker is ready:', reg);
 
     // 2️⃣ Fetch VAPID key and check response
-    const response = await fetch('http://localhost:3000/vapidPublicKey');
-    if (!response.ok) throw new Error(`VAPID key fetch failed: ${response.status}`); // <-- added here
+    const response = await fetch('/api/vapidPublicKey');
+    if (!response.ok) throw new Error(`VAPID key fetch failed: ${response.status}`);
     const vapidPublicKey = (await response.text()).trim();
+    console.log('VAPID public key received:', vapidPublicKey);
 
-    // 3️⃣ Subscribe user
+    // 3️⃣ Check existing subscription
+    const existingSubscription = await reg.pushManager.getSubscription();
+    if (existingSubscription) {
+      console.log('User already subscribed:', existingSubscription);
+      showToast("✅ Already subscribed to notifications!", "success");
+      return;
+    }
+
+    // 4️⃣ Subscribe user
     const subscription = await reg.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
     });
+    console.log('Push subscription created:', subscription);
 
-    // 4️⃣ Send subscription to server
-    const subscribeResponse = await fetch('http://localhost:3000/subscribe', {
+    // 5️⃣ Send subscription to server
+    const subscribeResponse = await fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(subscription)
     });
+    
     if (!subscribeResponse.ok) throw new Error('Failed to send subscription to server');
+    console.log('Subscription saved on server');
 
-    console.log('✅ Subscribed to push notifications');
+    showToast("✅ Successfully subscribed to notifications!", "success");
+    
+    // Show a test notification
+    setTimeout(() => {
+      reg.showNotification('Notifications Enabled!', {
+        body: 'You will now receive notifications from TechPulse Media',
+        icon: '/Assets/logo.png',
+        vibrate: [100, 50, 100]
+      });
+    }, 1000);
+    
   } catch (err) {
     console.error('Push subscription error:', err);
+    showToast("⚠️ Failed to subscribe to notifications: " + err.message, "error");
   }
 }
 
@@ -458,7 +717,6 @@ function showToast(message, type = "info") {
 }
 
 </script>
-
 
 </body>
 </html>
