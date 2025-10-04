@@ -277,7 +277,129 @@ footer {
     font-size: 1rem; /* even smaller text */
   }
 }
+/* Extra Small Screens (≤300px) */
+@media (max-width: 300px) {
+  /* Navigation */
+  .navbar-brand img {
+    height: 25px;
+  }
+  .navbar-brand span {
+    font-size: 0.85rem;
+  }
+  .navbar-toggler {
+    padding: 2px 5px;
+    font-size: 0.8rem;
+  }
+  .navbar-nav .nav-link {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+  }
+  .navbar-nav .btn {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
 
+  /* Hero Section */
+  .hero {
+    padding: 40px 8px;
+  }
+  .hero h1 {
+    font-size: 1.4rem;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    font-size: 0.85rem;
+    margin: 15px 0;
+  }
+  .hero .features {
+    gap: 10px;
+  }
+  .hero .feature-card {
+    min-width: 80px;
+    padding: 8px 6px;
+    font-size: 0.7rem;
+  }
+  .hero .feature-card i {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+  }
+
+  /* Content Sections */
+  section {
+    padding: 30px 8px;
+  }
+  section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+  }
+  section p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  /* Process & Project Cards */
+  .process .card, .projects .card {
+    padding: 12px 8px;
+    margin-bottom: 15px;
+  }
+  .process .card i, .projects .card i {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+  .process .card h5, .projects .card h5 {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  .process .card p, .projects .card p {
+    font-size: 0.75rem;
+    margin-bottom: 0;
+  }
+  .projects .card a {
+    font-size: 0.75rem;
+  }
+
+  /* CTA Section */
+  .cta {
+    padding: 40px 8px;
+  }
+  .cta h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .cta .btn-primary {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    width: 100%;
+  }
+
+  /* Footer */
+  footer {
+    padding: 10px;
+    font-size: 0.75rem;
+  }
+
+  /* Animations */
+  .animate-on-scroll {
+    transform: translateY(15px) scale(0.995);
+  }
+  .animate-on-scroll.show {
+    animation-duration: 500ms;
+  }
+
+  /* Grid Adjustments */
+  .row {
+    margin: 0 -5px;
+  }
+  .row > div {
+    padding: 0 5px;
+  }
+  .process .row > div,
+  .projects .row > div {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
 
 </style>
 </head>
@@ -413,5 +535,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
