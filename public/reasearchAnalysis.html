@@ -178,24 +178,6 @@ footer { background:var(--secondary-bg); text-align:center; padding:15px; color:
   .navbar-brand span { font-size:1rem; }
   [data-aos] { transform:none !important; opacity:1 !important; } /* Disable heavy animations for small screens */
 }
-
-/* Back-to-Top Button */
-#backToTop {
-  display:none; 
-  position:fixed; 
-  bottom:30px; 
-  right:30px; 
-  background:var(--accent); 
-  color:white; 
-  padding:10px 15px; 
-  border-radius:50px; 
-  z-index:9999; 
-  text-decoration:none; 
-  font-weight:bold; 
-  box-shadow:0 5px 15px rgba(0,0,0,0.3); 
-  transition:0.3s;
-}
-#backToTop:hover { background:#e65a00; }
 </style>
 </head>
 <body>
@@ -262,9 +244,6 @@ footer { background:var(--secondary-bg); text-align:center; padding:15px; color:
   <p>© 2025 TechPulse Media. All Rights Reserved</p>
 </footer>
 
-<!-- Back to Top Button -->
-<a href="#" id="backToTop">↑ Top</a>
-
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -293,20 +272,8 @@ footer { background:var(--secondary-bg); text-align:center; padding:15px; color:
     });
   });
 
-  // Back-to-Top Button
-  const backToTop = document.getElementById('backToTop');
-  window.addEventListener('scroll', () => {
-    backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
-  });
-  backToTop.addEventListener('click', e => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
   // Refresh AOS on resize
   window.addEventListener('resize', () => AOS.refresh());
 </script>
 </body>
 </html>
-
-
