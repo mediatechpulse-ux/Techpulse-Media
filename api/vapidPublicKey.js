@@ -1,9 +1,6 @@
 export default function handler(req, res) {
   try {
-    // Debug logging
     console.log('VAPID Public Key Request Received');
-    console.log('PUBLIC_VAPID_KEY value:', process.env.PUBLIC_VAPID_KEY);
-    console.log('PUBLIC_VAPID_KEY type:', typeof process.env.PUBLIC_VAPID_KEY);
     
     const publicKey = process.env.PUBLIC_VAPID_KEY;
     
@@ -17,7 +14,7 @@ export default function handler(req, res) {
     
     // Set proper content type header
     res.setHeader('Content-Type', 'text/plain');
-    console.log('Sending VAPID public key:', publicKey.substring(0, 20) + '...');
+    console.log('Sending VAPID public key');
     return res.status(200).send(publicKey);
   } catch (error) {
     console.error('Error in vapidPublic endpoint:', error);
