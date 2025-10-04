@@ -636,6 +636,7 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
+// In Contactus.html, update the subscribeUser function
 async function subscribeUser() {
   try {
     console.log('Starting push notification subscription...');
@@ -644,21 +645,28 @@ async function subscribeUser() {
     if (Notification.permission !== 'granted') {
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') {
-        throw new Error('Notification permission denied');
+        console.log('Notification permission denied');
+        return; // Just exit silently instead of showing an error
       }
     }
 
     // 1️⃣ Ensure Service Worker is ready
     const reg = await navigator.serviceWorker.ready;
-    if (!reg) throw new Error("Service Worker not ready");
+    if (!reg) {
+      console.log('Service Worker not ready');
+      return;
+    }
     console.log('Service Worker is ready:', reg);
 
     // 2️⃣ Fetch VAPID key and check response
     try {
       const response = await fetch('/api/vapidPublicKey');
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `VAPID key fetch failed: ${response.status}`);
+        if (response.status === 500) {
+          console.log('VAPID keys not configured on server - push notifications disabled');
+          return; // Exit silently
+        }
+        throw new Error(`VAPID key fetch failed: ${response.status}`);
       }
       const vapidPublicKey = (await response.text()).trim();
       console.log('VAPID public key received:', vapidPublicKey);
@@ -667,7 +675,6 @@ async function subscribeUser() {
       const existingSubscription = await reg.pushManager.getSubscription();
       if (existingSubscription) {
         console.log('User already subscribed:', existingSubscription);
-        showToast("✅ Already subscribed to notifications!", "success");
         return;
       }
 
@@ -700,24 +707,17 @@ async function subscribeUser() {
       }, 1000);
     } catch (vapidError) {
       console.error('VAPID key error:', vapidError);
-      showToast("⚠️ Notification service is temporarily unavailable. Please try again later.", "error");
+      // Don't show an error toast for this - it's not critical for the contact form to work
     }
     
   } catch (err) {
     console.error('Push subscription error:', err);
-    
-    // Provide a more user-friendly error message
-    let errorMessage = "Failed to subscribe to notifications";
-    if (err.message.includes('VAPID public key is not configured')) {
-      errorMessage = "Notification service is temporarily unavailable. Please try again later.";
-    } else if (err.message.includes('Notification permission denied')) {
-      errorMessage = "You've denied notification permissions. You can change this in your browser settings.";
+    // Only show toast for errors other than VAPID configuration issues
+    if (!err.message.includes('VAPID public key is not configured')) {
+      showToast("⚠️ Failed to subscribe to notifications", "error");
     }
-    
-    showToast("⚠️ " + errorMessage, "error");
   }
 }
-
 // Toast notification function
 function showToast(message, type = "info") {
   const toast = document.getElementById("toast");
@@ -738,3 +738,4 @@ function showToast(message, type = "info") {
 
 </body>
 </html>
+
