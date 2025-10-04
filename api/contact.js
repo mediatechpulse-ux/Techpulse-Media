@@ -126,6 +126,36 @@ function analyzeContent(content) {
 
 // ===== SPAM PROTECTION ADDITIONS END HERE =====
 
+// Database connection
+let cachedDb = null;
+
+async function connectToDatabase() {
+  // Check if we have a cached connection
+  if (cachedDb) {
+    console.log('Using cached database connection');
+    return cachedDb;
+  }
+
+  // Check if MONGO_URI is defined
+  if (!process.env.MONGO_URI) {
+    throw new Error('MONGO_URI environment variable is not defined');
+  }
+
+  console.log('Creating new database connection');
+  
+  // Connect to our MongoDB database
+  const db = await mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Timeout after 5s
+    socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+  });
+
+  cachedDb = db;
+  console.log('Database connected successfully');
+  return db;
+}
+
 // Main handler function
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -146,10 +176,7 @@ export default async function handler(req, res) {
     }
 
     // Connect to database
-    if (mongoose.connection.readyState !== 1) {
-      await mongoose.connect(process.env.MONGO_URI);
-      console.log('Connected to MongoDB');
-    }
+    await connectToDatabase();
 
     // ===== SPAM PROTECTION INTEGRATION STARTS HERE =====
     
@@ -346,6 +373,8 @@ export default async function handler(req, res) {
       errorMessage = 'Push notification configuration error';
     } else if (err.message.includes('ENOENT')) {
       errorMessage = 'File or directory not found';
+    } else if (err.message.includes('MONGO_URI')) {
+      errorMessage = 'Database configuration error: MONGO_URI is not defined';
     }
     
     res.status(statusCode).json({ 
