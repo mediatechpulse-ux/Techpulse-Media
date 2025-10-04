@@ -1,20 +1,20 @@
 {
   "name": "techpulse-media",
   "version": "1.0.0",
-  "type": "module",
   "description": "TechPulse Media - Contact Form with Push Notifications",
+  "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "dev": "vercel dev",
-    "build": "echo \"No build step required\"",
-    "start": "echo \"No start script required\""
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "mongoose": "^8.19.0",
     "nodemailer": "^6.10.1",
     "web-push": "^3.6.7"
+    
   },
   "engines": {
-    "node": "18.x || 20.x || 22.x"
+    "node": "22.x"
   },
   "keywords": [
     "contact-form",
@@ -22,6 +22,5 @@
     "vercel",
     "serverless"
   ],
-  "author": "TechPulse Media",
-  "license": "MIT"
+  "author": "TechPulse Media"
 }
