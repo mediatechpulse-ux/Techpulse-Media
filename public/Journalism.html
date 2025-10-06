@@ -201,8 +201,8 @@ nav a:hover, .dropdown-toggle:hover {
     width: 100%;
     box-shadow: none;
     background: rgba(59, 60, 65, 0.7);
-    margin-left: 0;         /* fix scroll issue */
-    padding-left: 15px;     /* keep indent inside */
+    margin-left: 0;         
+    padding-left: 15px;    
     border-radius: 0 0 8px 8px;
   }
   .dropdown.active .dropdown-menu { display: flex; flex-direction: column; }
@@ -236,7 +236,7 @@ nav a:hover, .dropdown-toggle:hover {
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  padding:100px 20px 0;   /* space for fixed header */
+  padding:100px 20px 0;   
   text-shadow:1px 1px 5px rgba(0,0,0,0.5);
     animation: fadeIn 1s ease-in-out;   /* ✅ yahan shift kar do */
 
@@ -286,7 +286,6 @@ footer {
   color:white;
 }
 
-/* Hero text responsive fix */
 @media (max-width: 768px) {
   .hero h1 { font-size: 1.8rem; }
   .hero p { font-size: 0.95rem; }
@@ -302,12 +301,10 @@ footer {
   .hero .btn { font-size: 0.85rem; padding: 6px 14px; }
 }
 @media (max-width: 360px) {
-  header span { font-size: 0.85rem; } /* prevent logo text overflow */
-  .feature-card { animation: none; }  /* disable float for tiny screens */
+  header span { font-size: 0.85rem; } 
+  .feature-card { animation: none; }  
 }
 
-/* Keyframes */
-/* Correct keyframes */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -398,7 +395,6 @@ document.addEventListener('DOMContentLoaded', function() {
     AOS.refresh();
   });
 
-  // Close nav on any link click (mobile only)
   document.querySelectorAll('nav a, .dropdown-item').forEach(link => {
     link.addEventListener('click', () => {
       if (window.innerWidth <= 991) {
@@ -424,4 +420,5 @@ function toggleDropdown(el){
 </script>
 </body>
 </html>
+
 
