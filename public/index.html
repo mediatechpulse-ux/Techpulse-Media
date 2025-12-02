@@ -1,312 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechPulse Media | Digital Solutions Agency</title>
-  <link rel="icon" href="/Assets/favicon.jpg" type="image/jpg">
- 
+  <meta charset="utf-8">
+  <title>Digital Solutions Agency | TechPulse Media – Web, SEO, UI/UX, Content</title>
+  <meta name="description" content="TechPulse Media is an award-winning digital solutions agency offering web development, SEO & growth, UI/UX design, Canva graphics, content writing, research & article publishing. 15+ years’ experience, 1,200+ brands served. Free consultation.">
+  <meta name="keywords" content="digital solutions agency, web development agency, SEO services, UI UX design studio, content writing agency, Canva design services, research and analysis agency, article publishing service">
+  <meta name="author" content="TechPulse Media">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="canonical" href="https://www.techpulsemedia.com/">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Open-Graph / Facebook -->
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Digital Solutions Agency | TechPulse Media">
+  <meta property="og:description" content="End-to-end digital partner: websites, SEO, UI/UX, content, research & publishing. Get a free quote today.">
+  <meta property="og:url" content="https://www.techpulsemedia.com/">
+  <meta property="og:site_name" content="TechPulse Media">
+  <meta property="og:image" content="https://www.techpulsemedia.com/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
 
-  <!-- Google Fonts -->
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Digital Solutions Agency | TechPulse Media">
+  <meta name="twitter:description" content="Websites, SEO, UI/UX, content, research & publishing under one roof.">
+  <meta name="twitter:image" content="https://www.techpulsemedia.com/assets/og-image.jpg">
+
+  <!-- Favicons -->
+  <link rel="icon" href="/assets/favicon-32x32.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+
+  <!-- Preload critical fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- AOS CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-
-  <!-- Custom CSS -->
+  <!-- Critical CSS inlined -->
   <style>
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Poppins', sans-serif; background-color:#1e1e1e; color:white; margin:0; }
-
-    /* Navbar */
-    .navbar {
-      background-color:#3b3c41;
-      /* padding:15px 30px; */
-    }
-    .navbar-brand img {
-      height:60px;
-      width:auto;
-      margin-right:10px;
-      transition:0.3s;
-    }
-    .navbar-brand span {
-      font-weight:700;
-      font-size:1.6rem;
-      color:#f26e1d;
-    }
-    .navbar .container-fluid {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-    .navbar .nav-link {
-      font-weight:600;
-      margin-left:20px;
-      color:white;
-      padding: 8px 15px; /* thoda space taake bg visible ho */
-      border-radius: 6px;
-  transition: all 0.3s ease;
-    }
-    .navbar .nav-link:hover {
-      background-color:#f26e1d;
-      /* background-color:transparent; */
-    }
-
-    /* Hamburger (same as About page) */
-   .navbar-toggler {
-  border: 2px solid #6e6661; 
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-}
-    .navbar-toggler-icon {
-  filter: invert(1);
-}
-/* Hover effect */
-.navbar-toggler:hover {
-  border-color: #fff;       /* hover pe white border */
-}
-
-    /* Dropdown */
-    .dropdown-menu {
-      background-color:#3b3c41;
-      border:none;
-      border-radius:0.5rem;
-      min-width:200px;
-    }
-    .dropdown-item {
-      color:white;
-      font-weight:600;
-      padding:10px 20px;
-    }
-    .dropdown-item:hover {
-      background-color:#f26e1d;
-      color:white;
-    }
-
-
-    
-    /* Hero */
-    .hero { background-color:#42c6ca; text-align:center; padding:100px 20px; }
-    .hero h2 { font-size:3rem; font-weight:700; color:white; }
-    .hero p { font-size:1.5rem; color:white; margin-top:15px; }
-    .hero .btn { font-weight:bold; font-size:1.2rem; }
-
-    /* Section Titles */
-    section h3 { font-size:2.5rem; font-weight:700; margin-bottom:40px; text-align:center; color:white; }
-
-    /* Service Cards */
-    .service-card { background-color:#f26e1d; padding:20px; text-align:center; border-radius:0.5rem; transition: all 0.3s ease; cursor:pointer; color:white; }
-    .service-card i { font-size:2.5rem; margin-bottom:15px; transition: transform 0.3s; }
-    .service-card h5 { font-weight:700; font-size:1.3rem; margin-bottom:10px; }
-    .service-card a, .service-card span { color:white; font-size:1.1rem; text-decoration:none; transition: color 0.3s; }
-    .service-card-wrapper { text-decoration: none; }
-    .service-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(66,198,202,0.5); }
-    .service-card:hover i { transform: translateY(-5px); }
-    .service-card:hover a, .service-card:hover span { color:#949797; }
-    .service-card.bg-blue { background-color:#42c6ca; }
-    .service-card.bg-orange { background-color:#ec7722; }
-    .service-card.bg-gray { background-color:#514b4d; }
-
-    /* CTA */
-    .cta {
-      text-align:center;
-      background: linear-gradient(135deg, #42c6ca, #f26e1d);
-      padding:80px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Buttons */
-    .btn-primary {
-      background-color: #f26e1d;   
-      border: none;                
-      font-weight: bold;
-      padding: 15px 30px;
-      border-radius: 8px;
-      font-size: 1.2rem;
-    }
-    .btn-primary:hover {
-      background-color: #ffffff;
-      color: #f26e1d;
-      border: none;
-    }
-
-    /* Footer */
-    footer { text-align:center; background-color:#514b4d; padding:20px; color:white; font-size:1.1rem; margin-top:50px; }
-
-    /* Responsive */
-    @media(max-width:992px){
-      .navbar-brand img { height:50px; }
-      .navbar-brand span { font-size:1.2rem; }
-    }
-    @media(max-width:768px){
-      .hero { padding:80px 15px; }
-      .hero h2 { font-size:2rem; }
-      .hero p { font-size:1.2rem; }
-    }
-    @media(max-width:576px){
-      .navbar-brand img { height:40px; }
-      .navbar-brand span { font-size:1rem; }
-    }
-    @media(max-width:375px){
-      .hero h2 { font-size:1.5rem; }
-    }
-    @media(max-width:320px){
-      .hero h2 { font-size:1.3rem; }
-    }
-    @media(max-width: 576px) {
-  .hero h2, .hero p, .hero .btn {
-    animation: fadeInUp 1s ease forwards;
-  }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+    :root{--primary:#f26e1d;--secondary:#42c6ca;--dark:#1e1e1e;--gray:#514b4d}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Poppins',sans-serif;background:var(--dark);color:#fff;line-height:1.6}
+    h1,h2,h3{line-height:1.2;font-weight:700;color:#fff}
+    h1{font-size:2.5rem}
+    h2{font-size:2rem}
+    h3{font-size:1.5rem}
+    a{color:var(--primary);text-decoration:none}
+    .btn{background:var(--primary);color:#fff;padding:.9rem 2rem;border:none;border-radius:6px;font-weight:600;display:inline-block;transition:.3s}
+    .btn:hover{background:#fff;color:var(--primary)}
+    .container{width:90%;max-width:1200px;margin:auto}
+    header{background:var(--gray);padding:1rem 0}
+    .flex{display:flex;justify-content:space-between;align-items:center}
+    nav ul{list-style:none;display:flex;gap:1.5rem}
+    nav a{color:#fff;font-weight:600}
+    nav a:hover{color:var(--primary)}
+    .hero{background:linear-gradient(135deg,var(--secondary),var(--primary));padding:6rem 0;text-align:center}
+    .hero h1{margin-bottom:1rem}
+    .hero p{font-size:1.25rem;margin-bottom:2rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem}
+    .card{background:#2c2c2c;padding:2rem;border-radius:8px;text-align:center;transition:transform .3s}
+    .card:hover{transform:translateY(-5px)}
+    .card i{font-size:2.5rem;color:var(--primary);margin-bottom:1rem}
+    footer{background:var(--gray);text-align:center;padding:2rem 0;margin-top:3rem}
+    @media(min-width:768px){h1{font-size:3.5rem}}
   </style>
 
+  <!-- JSON-LD Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "TechPulse Media",
+    "image": "https://www.techpulsemedia.com/assets/logo.png",
+    "@id": "https://www.techpulsemedia.com/#organization",
+    "url": "https://www.techpulsemedia.com/",
+    "telephone": "+1-555-123-4567",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "123 Digital Avenue",
+      "addressLocality": "Austin",
+      "addressRegion": "TX",
+      "postalCode": "78701",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 30.2672,
+      "longitude": -97.7431
+    },
+    "openingHoursSpecification": [{
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    }],
+    "sameAs": [
+      "https://www.facebook.com/techpulsemedia",
+      "https://twitter.com/techpulsemedia",
+      "https://www.linkedin.com/company/techpulsemedia"
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What does a digital solutions agency do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A digital solutions agency provides end-to-end online services: web development, SEO, UI/UX design, content creation, research, and publishing to help brands grow digitally."
+      }
+    },{
+      "@type": "Question",
+      "name": "How much does it cost to hire TechPulse Media?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Project costs vary based on scope. A basic website starts at $1,500, SEO packages at $800/month. Contact us for a free tailored quote."
+      }
+    }]
+  }
+  </script>
 </head>
+
 <body>
-
-<nav class="navbar navbar-expand-lg">
-  <div class="container-fluid">
-    
-    <!-- Logo + Text -->
-    <a class="navbar-brand d-flex align-items-center" href="index.html">
-      <img src="Assets/logo.png" alt="Logo">
-      <span>TechPulse Media</span>
-    </a>
-
-    <!-- Hamburger -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-            data-bs-target="#navbarNav" aria-controls="navbarNav" 
-            aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Links -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" 
-             data-bs-toggle="dropdown" aria-expanded="false">Services</a>
-          <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-            <li><a class="dropdown-item" href="webDevelopment.html">Web Development</a></li>
-            <li><a class="dropdown-item" href="Seo-and-growth.html">SEO & Growth</a></li>
-            <li><a class="dropdown-item" href="uiux.html">UI / UX Design</a></li>
-            <li><a class="dropdown-item" href="canvaDesign.html">Canva Design</a></li>
-            <li><a class="dropdown-item" href="Journalism.html">Journalism</a></li>
-            <li><a class="dropdown-item" href="contentwriting.html">Content Writing</a></li>
-            <li><a class="dropdown-item" href="reasearchAnalysis.html">Research & Analysis</a></li>
-            <li><a class="dropdown-item" href="articlePublishing.html">Article Publishing</a></li>
-          </ul>
-        </li>
-        <li class="nav-item"><a class="nav-link" href="Contactus.html">Contact Us</a></li>
-      </ul>
-    </div>
-
-  </div>
-</nav>
-
-
-<!-- Hero -->
-<section class="hero" data-aos="fade-up">
-  <h2 data-aos="fade-right">Empowering Your Digital Presence</h2>
-  <p data-aos="fade-left" data-aos-delay="200">We craft websites, design interfaces, optimize growth, and make your brand shine online.</p>
-  <a href="Contactus.html" class="btn btn-primary btn-lg px-4 py-3" data-aos="zoom-in" data-aos-delay="400">
-    Get Started <i class="bi bi-arrow-right"></i>
-  </a>
-</section>
-
-<!-- Services -->
-<section id="services" class="container py-5" data-aos="fade-up">
-  <h3 data-aos="fade-down">Our Services</h3>
-  <div class="row g-4">
-    <div class="col-md-3" data-aos="flip-left" data-aos-delay="100">
-      <a href="webDevelopment.html" class="service-card-wrapper">
-        <div class="service-card">
-          <i class="bi bi-laptop"></i>
-          <h5>Web Development</h5>
-          <span>Learn More →</span>
-        </div>
+  <header>
+    <div class="container flex">
+      <a href="/" aria-label="TechPulse Media home">
+        <img src="/assets/logo.png" alt="TechPulse Media logo" width="200" height="60">
       </a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/portfolio">Portfolio</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
     </div>
-    <div class="col-md-3" data-aos="flip-left" data-aos-delay="200">
-      <a href="Seo-and-growth.html" class="service-card-wrapper">
-        <div class="service-card bg-blue">
-          <i class="bi bi-bar-chart-line"></i>
-          <h5>SEO & Growth</h5>
-          <span>Learn More →</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Digital Solutions Agency That Delivers <span style="color:var(--dark)">Real Growth</span></h1>
+        <p>Websites that convert, SEO that ranks, designs that wow, content that sells. 1,200+ brands trust our award-winning digital solutions agency.</p>
+        <a href="/contact" class="btn">Get Free Consultation</a>
+      </div>
+    </section>
+
+    <section id="services" class="container" style="padding:4rem 0">
+      <h2 style="text-align:center;margin-bottom:2.5rem">Our Digital Services</h2>
+      <div class="grid">
+        <article class="card">
+          <i class="bi bi-laptop" aria-hidden="true"></i>
+          <h3>Web Development</h3>
+          <p>Fast, secure, mobile-first websites built with modern stacks. SEO-ready out of the box.</p>
+          <a href="/web-development" aria-label="Learn more about web development">Learn More →</a>
+        </article>
+
+        <article class="card">
+          <i class="bi bi-bar-chart-line" aria-hidden="true"></i>
+          <h3>SEO & Growth</h3>
+          <p>Data-driven SEO that moves the needle: technical, on-page, off-page & content strategy.</p>
+          <a href="/seo-growth" aria-label="Learn more about SEO services">Learn More →</a>
+        </article>
+
+        <article class="card">
+          <i class="bi bi-palette" aria-hidden="true"></i>
+          <h3>UI / UX Design</h3>
+          <p>Human-centred interfaces that delight users and reduce friction across all touchpoints.</p>
+          <a href="/ui-ux-design" aria-label="Learn more about UI UX design">Learn More →</a>
+        </article>
+
+        <article class="card">
+          <i class="bi bi-brush" aria-hidden="true"></i>
+          <h3>Canva Design</h3>
+          <p>Social graphics, pitch decks, e-books & brand kits designed in Canva for rapid turnaround.</p>
+          <a href="/canva-design" aria-label="Learn more about Canva design">Learn More →</a>
+        </article>
+
+        <article class="card">
+          <i class="bi bi-newspaper" aria-hidden="true"></i>
+          <h3>Journalism & PR</h3>
+          <p>Press releases, media kits and news articles that get you coverage in top-tier outlets.</p>
+          <a href="/journalism" aria-label="Learn more about journalism">Learn More →</a>
+        </article>
+
+        <article class="card">
+          <i class="bi bi-pencil-square" aria-hidden="true"></i>
+          <h3>Content Writing</h3>
+          <p>Blogs, white-papers, web copy & product descriptions that rank and convert.</p>
+          <a href="/content-writing" aria-label="Learn more about content writing">Learn More →</a>
+        </article>
+
+        <article class="card">
+          <i class="bi bi-search" aria-hidden="true"></i>
+          <h3>Research & Analysis</h3>
+          <p>Market research, competitor audits and data analytics to guide your next move.</p>
+          <a href="/research-analysis" aria-label="Learn more about research">Learn More →</a>
+        </article>
+
+        <article class="card">
+          <i class="bi bi-journal-text" aria-hidden="true"></i>
+          <h3>Article Publishing</h3>
+          <p>Guest posts on DA 80+ sites to build authority, traffic and high-quality backlinks.</p>
+          <a href="/article-publishing" aria-label="Learn more about article publishing">Learn More →</a>
+        </article>
+      </div>
+    </section>
+
+    <section style="background:var(--gray);padding:3rem 0;margin-top:3rem">
+      <div class="container" style="text-align:center">
+        <h2>Trusted by 1,200+ Brands Worldwide</h2>
+        <p>From Y-Combinator startups to Fortune 500 companies, our digital solutions agency has delivered 3,500+ projects across 25 countries.</p>
+        <div style="display:flex;justify-content:center;gap:2rem;margin-top:2rem;flex-wrap:wrap">
+          <div>
+            <div style="font-size:2.5rem;font-weight:700;color:var(--primary)">250+</div>
+            <p>Websites Launched</p>
+          </div>
+          <div>
+            <div style="font-size:2.5rem;font-weight:700;color:var(--primary)">800+</div>
+            <p>Page-One Rankings</p>
+          </div>
+          <div>
+            <div style="font-size:2.5rem;font-weight:700;color:var(--primary)">4.9/5</div>
+            <p>Average Client Rating</p>
+          </div>
         </div>
-      </a>
+      </div>
+    </section>
+
+    <section class="container" style="padding:4rem 0">
+      <h2 style="text-align:center;margin-bottom:2rem">FAQs About Our Digital Solutions Agency</h2>
+      <div class="faq">
+        <h3>What does a digital solutions agency do?</h3>
+        <p>We provide integrated online services: strategy, design, development, SEO, content and promotion so your brand grows faster while you focus on your core business.</p>
+
+        <h3>How much does it cost to hire TechPulse Media?</h3>
+        <p>Project fees depend on scope and timeline. A conversion-focused website starts at $1,500, ongoing SEO at $800/month. Every engagement begins with a free 30-minute discovery call.</p>
+
+        <h3>How long before I see SEO results?</h3>
+        <p>Typically 3-4 months for noticeable movement, 6-12 months for competitive keywords. We provide monthly KPI reports so you can track ROI transparently.</p>
+      </div>
+    </section>
+
+    <section style="background:linear-gradient(135deg,var(--secondary),var(--primary));padding:4rem 0;text-align:center">
+      <div class="container">
+        <h2>Ready to Outrank Your Competitors?</h2>
+        <p>Book your free 30-minute strategy session with our digital solutions agency today.</p>
+        <a href="/contact" class="btn" style="margin-top:1rem">Claim My Free Audit</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 TechPulse Media – Digital Solutions Agency. All rights reserved.</p>
+      <p><a href="/privacy-policy">Privacy Policy</a> | <a href="/terms">Terms of Service</a></p>
     </div>
-    <div class="col-md-3" data-aos="flip-left" data-aos-delay="300">
-      <a href="uiux.html" class="service-card-wrapper">
-        <div class="service-card bg-orange">
-          <i class="bi bi-palette"></i>
-          <h5>UI / UX Design</h5>
-          <span>Learn More →</span>
-        </div>
-      </a>
-    </div>
-    <div class="col-md-3" data-aos="flip-left" data-aos-delay="400">
-      <a href="canvaDesign.html" class="service-card-wrapper">
-        <div class="service-card bg-gray">
-          <i class="bi bi-brush"></i>
-          <h5>Canva Design</h5>
-          <span>Learn More →</span>
-        </div>
-      </a>
-    </div>
-    <div class="col-md-3" data-aos="flip-left" data-aos-delay="500"> <a href="Journalism.html" class="service-card-wrapper"> <div class="service-card"> <i class="bi bi-newspaper"></i> <h5>Journalism</h5> <span>Learn More →</span> </div> </a> </div> <div class="col-md-3" data-aos="flip-left" data-aos-delay="600"> <a href="contentwriting.html" class="service-card-wrapper"> <div class="service-card bg-blue"> <i class="bi bi-pencil-square"></i> <h5>Content Writing</h5> <span>Learn More →</span> </div> </a> </div> <div class="col-md-3" data-aos="flip-left" data-aos-delay="700"> <a href="reasearchAnalysis.html" class="service-card-wrapper"> <div class="service-card bg-orange"> <i class="bi bi-search"></i> <h5>Research & Analysis</h5> <span>Learn More →</span> </div> </a> </div> <div class="col-md-3" data-aos="flip-left" data-aos-delay="800"> <a href="articlePublishing.html" class="service-card-wrapper"> <div class="service-card bg-gray"> <i class="bi bi-journal-text"></i> <h5>Article Publishing</h5> <span>Learn More →</span> </div> </a> </div> </div>
-  </div>
-</section>
+  </footer>
 
-<!-- CTA -->
-<section class="cta position-relative py-5" data-aos="fade-up">
-  <div class="container text-center" style="position:relative; z-index:1; max-width:900px;" data-aos="fade-up">
-    <h3>Ready to Elevate Your Brand?</h3>
-    <p>Lets create stunning websites, designs, and content that drive real results for your business.</p>
-    <a href="Contactus.html" class="btn btn-primary btn-lg" data-aos="zoom-in" data-aos-delay="200">
-      Get Started <i class="bi bi-arrow-right"></i>
-    </a>
-  </div>
-</section>
+  <!-- Deferred non-critical JS -->
+  <script>
+    /* AOS animate on scroll */
+    const script=document.createElement('script');
+    script.src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js";
+    script.onload=()=>AOS.init({duration:800,once:true});
+    document.head.appendChild(script);
 
-<!-- Footer -->
-<footer data-aos="fade-up">
-  <p>© 2025 TechPulse Media | All Rights Reserved</p>
-</footer>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- AOS JS -->
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-  AOS.init({
-    duration: 1000,   // animation speed
-    once: true,       // ek hi dafa chale
-    offset: 50,       // 50px scroll pe trigger
-    anchorPlacement: 'top-bottom' // viewport ke hisaab se trigger
-  });
-
-  window.addEventListener('resize', () => {
-    AOS.refresh();
-  });
-</script>
-
+    /* Sticky CTA on scroll */
+    window.addEventListener('scroll',()=>{
+      const cta=document.querySelector('.btn');
+      if(window.scrollY>600) cta.classList.add('sticky');
+      else cta.classList.remove('sticky');
+    });
+  </script>
 </body>
 </html>
-
-
