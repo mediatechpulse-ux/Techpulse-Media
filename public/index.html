@@ -3,32 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="TechPulse Media: Full-service digital agency offering web development, SEO, UI/UX design, content writing, and digital marketing solutions to grow your business online.">
-  <meta name="keywords" content="digital solutions agency, web development, SEO services, UI UX design, content writing, digital marketing, TechPulse Media">
-  <meta name="author" content="TechPulse Media">
-  <link rel="canonical" href="https://www.yourwebsite.com/">
-
-  <!-- Open Graph Tags -->
-  <meta property="og:title" content="TechPulse Media | Digital Solutions Agency">
-  <meta property="og:description" content="Expert digital solutions including web development, SEO, UI/UX design, and content writing to elevate your brand online.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.yourwebsite.com/">
-  <meta property="og:image" content="https://www.yourwebsite.com/Assets/og-image.jpg">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="TechPulse Media | Digital Solutions Agency">
-  <meta name="twitter:description" content="Expert digital solutions to grow your business online.">
-  <meta name="twitter:image" content="https://www.yourwebsite.com/Assets/og-image.jpg">
-  
   <title>TechPulse Media | Digital Solutions Agency</title>
   <link rel="icon" href="/Assets/favicon.jpg" type="image/jpg">
  
-  <!-- Preload Critical Resources -->
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style">
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" as="style">
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -47,15 +24,10 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'Poppins', sans-serif; background-color:#1e1e1e; color:white; margin:0; }
 
-    /* Breadcrumb */
-    .breadcrumb { background-color: transparent; margin-bottom: 0; }
-    .breadcrumb-item + .breadcrumb-item::before { color: #f26e1d; }
-    .breadcrumb-item a { color: #42c6ca; text-decoration: none; }
-    .breadcrumb-item a:hover { color: #f26e1d; }
-
     /* Navbar */
     .navbar {
       background-color:#3b3c41;
+      /* padding:15px 30px; */
     }
     .navbar-brand img {
       height:60px;
@@ -77,15 +49,16 @@
       font-weight:600;
       margin-left:20px;
       color:white;
-      padding: 8px 15px; 
+      padding: 8px 15px; /* thoda space taake bg visible ho */
       border-radius: 6px;
   transition: all 0.3s ease;
     }
     .navbar .nav-link:hover {
       background-color:#f26e1d;
+      /* background-color:transparent; */
     }
 
-    /* Hamburger */
+    /* Hamburger (same as About page) */
    .navbar-toggler {
   border: 2px solid #6e6661; 
   padding: 6px 10px;
@@ -95,8 +68,9 @@
     .navbar-toggler-icon {
   filter: invert(1);
 }
+/* Hover effect */
 .navbar-toggler:hover {
-  border-color: #fff;       
+  border-color: #fff;       /* hover pe white border */
 }
 
     /* Dropdown */
@@ -116,14 +90,16 @@
       color:white;
     }
 
+
+    
     /* Hero */
     .hero { background-color:#42c6ca; text-align:center; padding:100px 20px; }
-    .hero h1 { font-size:3rem; font-weight:700; color:white; }
+    .hero h2 { font-size:3rem; font-weight:700; color:white; }
     .hero p { font-size:1.5rem; color:white; margin-top:15px; }
     .hero .btn { font-weight:bold; font-size:1.2rem; }
 
     /* Section Titles */
-    section h2 { font-size:2.5rem; font-weight:700; margin-bottom:40px; text-align:center; color:white; }
+    section h3 { font-size:2.5rem; font-weight:700; margin-bottom:40px; text-align:center; color:white; }
 
     /* Service Cards */
     .service-card { background-color:#f26e1d; padding:20px; text-align:center; border-radius:0.5rem; transition: all 0.3s ease; cursor:pointer; color:white; }
@@ -137,50 +113,6 @@
     .service-card.bg-blue { background-color:#42c6ca; }
     .service-card.bg-orange { background-color:#ec7722; }
     .service-card.bg-gray { background-color:#514b4d; }
-
-    /* Testimonials */
-    .testimonial-card {
-      background-color: #2d2d2d;
-      border-radius: 10px;
-      padding: 25px;
-      margin-bottom: 20px;
-      border-left: 4px solid #f26e1d;
-    }
-    .testimonial-card p {
-      font-style: italic;
-      margin-bottom: 15px;
-    }
-    .testimonial-card h5 {
-      color: #f26e1d;
-      margin-bottom: 5px;
-    }
-    .testimonial-card .client-position {
-      font-size: 0.9rem;
-      color: #aaa;
-    }
-
-    /* FAQ */
-    .accordion-button {
-      background-color: #2d2d2d;
-      color: white;
-      font-weight: 600;
-    }
-    .accordion-button:not(.collapsed) {
-      background-color: #3b3c41;
-      color: #f26e1d;
-    }
-    .accordion-button:focus {
-      box-shadow: none;
-      border-color: #f26e1d;
-    }
-    .accordion-body {
-      background-color: #2d2d2d;
-      color: #ddd;
-    }
-    .accordion-item {
-      border: 1px solid #444;
-      margin-bottom: 10px;
-    }
 
     /* CTA */
     .cta {
@@ -216,7 +148,7 @@
     }
     @media(max-width:768px){
       .hero { padding:80px 15px; }
-      .hero h1 { font-size:2rem; }
+      .hero h2 { font-size:2rem; }
       .hero p { font-size:1.2rem; }
     }
     @media(max-width:576px){
@@ -224,13 +156,13 @@
       .navbar-brand span { font-size:1rem; }
     }
     @media(max-width:375px){
-      .hero h1 { font-size:1.5rem; }
+      .hero h2 { font-size:1.5rem; }
     }
     @media(max-width:320px){
-      .hero h1 { font-size:1.3rem; }
+      .hero h2 { font-size:1.3rem; }
     }
     @media(max-width: 576px) {
-  .hero h1, .hero p, .hero .btn {
+  .hero h2, .hero p, .hero .btn {
     animation: fadeInUp 1s ease forwards;
   }
 }
@@ -242,73 +174,15 @@
 
   </style>
 
-  <!-- Schema Markup -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "TechPulse Media",
-    "url": "https://www.yourwebsite.com",
-    "logo": "https://www.yourwebsite.com/Assets/logo.png",
-    "description": "Full-service digital agency offering web development, SEO, UI/UX design, and content marketing solutions",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Your Business Address",
-      "addressLocality": "City",
-      "addressRegion": "State",
-      "postalCode": "ZIP",
-      "addressCountry": "Country"
-    },
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+1-XXX-XXX-XXXX",
-      "contactType": "customer service"
-    },
-    "sameAs": [
-      "https://www.facebook.com/yourprofile",
-      "https://www.linkedin.com/company/yourcompany"
-    ],
-    "service": [
-      {
-        "@type": "Service",
-        "name": "Web Development",
-        "description": "Custom website development services"
-      },
-      {
-        "@type": "Service",
-        "name": "SEO Services",
-        "description": "Search engine optimization to improve rankings"
-      },
-      {
-        "@type": "Service",
-        "name": "UI/UX Design",
-        "description": "User interface and experience design"
-      },
-      {
-        "@type": "Service",
-        "name": "Content Writing",
-        "description": "Professional content creation services"
-      }
-    ]
-  }
-  </script>
 </head>
 <body>
 
-<!-- Breadcrumb Navigation -->
-<nav aria-label="breadcrumb" class="container mt-3">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-  </ol>
-</nav>
-
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg" role="navigation" aria-label="Main Navigation">
+<nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
     
     <!-- Logo + Text -->
     <a class="navbar-brand d-flex align-items-center" href="index.html">
-      <img src="Assets/logo.png" alt="TechPulse Media - Digital Solutions Agency Logo">
+      <img src="Assets/logo.png" alt="Logo">
       <span>TechPulse Media</span>
     </a>
 
@@ -345,178 +219,70 @@
   </div>
 </nav>
 
-<!-- Main Content -->
-<main>
-  <!-- Hero Section -->
-  <section class="hero" data-aos="fade-up">
-    <h1 data-aos="fade-right">Empowering Your Digital Presence</h1>
-    <p data-aos="fade-left" data-aos-delay="200">TechPulse Media crafts high-performance <a href="webDevelopment.html">websites</a>, implements result-driven <a href="Seo-and-growth.html">SEO strategies</a>, creates stunning <a href="uiux.html">UI/UX designs</a>, and develops compelling <a href="contentwriting.html">content</a> to make your brand dominate online.</p>
-    <a href="Contactus.html" class="btn btn-primary btn-lg px-4 py-3" data-aos="zoom-in" data-aos-delay="400">
-      Get Started <i class="bi bi-arrow-right"></i>
-    </a>
-  </section>
 
-  <!-- Services Section -->
-  <section id="services" class="container py-5" data-aos="fade-up">
-    <h2 data-aos="fade-down">Our Digital Solutions</h2>
-    <div class="row g-4">
-      <div class="col-md-3" data-aos="flip-left" data-aos-delay="100">
-        <a href="webDevelopment.html" class="service-card-wrapper">
-          <div class="service-card">
-            <i class="bi bi-laptop"></i>
-            <h5>Web Development</h5>
-            <span>Custom websites that convert visitors →</span>
-          </div>
-        </a>
-      </div>
-      <div class="col-md-3" data-aos="flip-left" data-aos-delay="200">
-        <a href="Seo-and-growth.html" class="service-card-wrapper">
-          <div class="service-card bg-blue">
-            <i class="bi bi-bar-chart-line"></i>
-            <h5>SEO & Growth</h5>
-            <span>Drive traffic with proven SEO strategies →</span>
-          </div>
-        </a>
-      </div>
-      <div class="col-md-3" data-aos="flip-left" data-aos-delay="300">
-        <a href="uiux.html" class="service-card-wrapper">
-          <div class="service-card bg-orange">
-            <i class="bi bi-palette"></i>
-            <h5>UI / UX Design</h5>
-            <span>Engaging interfaces that delight users →</span>
-          </div>
-        </a>
-      </div>
-      <div class="col-md-3" data-aos="flip-left" data-aos-delay="400">
-        <a href="canvaDesign.html" class="service-card-wrapper">
-          <div class="service-card bg-gray">
-            <i class="bi bi-brush"></i>
-            <h5>Canva Design</h5>
-            <span>Professional graphics for your brand →</span>
-          </div>
-        </a>
-      </div>
-      <div class="col-md-3" data-aos="flip-left" data-aos-delay="500"> 
-        <a href="Journalism.html" class="service-card-wrapper"> 
-          <div class="service-card"> 
-            <i class="bi bi-newspaper"></i> 
-            <h5>Journalism</h5> 
-            <span>Credible content that builds trust →</span> 
-          </div> 
-        </a> 
-      </div> 
-      <div class="col-md-3" data-aos="flip-left" data-aos-delay="600"> 
-        <a href="contentwriting.html" class="service-card-wrapper"> 
-          <div class="service-card bg-blue"> 
-            <i class="bi bi-pencil-square"></i> 
-            <h5>Content Writing</h5> 
-            <span>Compelling copy that converts →</span> 
-          </div> 
-        </a> 
-      </div> 
-      <div class="col-md-3" data-aos="flip-left" data-aos-delay="700"> 
-        <a href="reasearchAnalysis.html" class="service-card-wrapper"> 
-          <div class="service-card bg-orange"> 
-            <i class="bi bi-search"></i> 
-            <h5>Research & Analysis</h5> 
-            <span>Data-driven insights for growth →</span> 
-          </div> 
-        </a> 
-      </div> 
-      <div class="col-md-3" data-aos="flip-left" data-aos-delay="800"> 
-        <a href="articlePublishing.html" class="service-card-wrapper"> 
-          <div class="service-card bg-gray"> 
-            <i class="bi bi-journal-text"></i> 
-            <h5>Article Publishing</h5> 
-            <span>Amplify your reach with expert content →</span> 
-          </div> 
-        </a> 
-      </div> 
-    </div>
-  </section>
+<!-- Hero -->
+<section class="hero" data-aos="fade-up">
+  <h2 data-aos="fade-right">Empowering Your Digital Presence</h2>
+  <p data-aos="fade-left" data-aos-delay="200">We craft websites, design interfaces, optimize growth, and make your brand shine online.</p>
+  <a href="Contactus.html" class="btn btn-primary btn-lg px-4 py-3" data-aos="zoom-in" data-aos-delay="400">
+    Get Started <i class="bi bi-arrow-right"></i>
+  </a>
+</section>
 
-  <!-- Testimonials Section -->
-  <section class="container py-5" data-aos="fade-up">
-    <h2 data-aos="fade-down">What Our Clients Say</h2>
-    <div class="row g-4">
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="testimonial-card">
-          <p>"TechPulse Media transformed our online presence. Their SEO strategy increased our traffic by 150% in just 3 months!"</p>
-          <h5>John Smith</h5>
-          <p class="client-position">CEO, TechStart Inc.</p>
+<!-- Services -->
+<section id="services" class="container py-5" data-aos="fade-up">
+  <h3 data-aos="fade-down">Our Services</h3>
+  <div class="row g-4">
+    <div class="col-md-3" data-aos="flip-left" data-aos-delay="100">
+      <a href="webDevelopment.html" class="service-card-wrapper">
+        <div class="service-card">
+          <i class="bi bi-laptop"></i>
+          <h5>Web Development</h5>
+          <span>Learn More →</span>
         </div>
-      </div>
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="testimonial-card">
-          <p>"The new website designed by TechPulse Media not only looks amazing but has doubled our conversion rate."</p>
-          <h5>Sarah Johnson</h5>
-          <p class="client-position">Marketing Director, GrowthCo</p>
-        </div>
-      </div>
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-        <div class="testimonial-card">
-          <p>"Their content writing team consistently delivers high-quality articles that resonate with our audience."</p>
-          <h5>Michael Chen</h5>
-          <p class="client-position">Founder, InnovateLab</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ Section -->
-  <section class="container py-5" data-aos="fade-up">
-    <h2 data-aos="fade-down">Frequently Asked Questions</h2>
-    <div class="accordion" id="faqAccordion">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-            How long does a typical web development project take?
-          </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-          <div class="accordion-body">
-            Most web development projects take 4-8 weeks depending on complexity and requirements. We'll provide a detailed timeline during our initial consultation.
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingTwo">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
-            What makes your SEO services different?
-          </button>
-        </h2>
-        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-          <div class="accordion-body">
-            Our SEO approach combines technical expertise with content strategy and data analysis. We focus on sustainable growth rather than quick fixes, ensuring long-term success for your business.
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingThree">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
-            Do you offer ongoing support after project completion?
-          </button>
-        </h2>
-        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-          <div class="accordion-body">
-            Yes, we offer various maintenance and support packages to ensure your digital assets continue to perform optimally. We're committed to your long-term success.
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="cta position-relative py-5" data-aos="fade-up">
-    <div class="container text-center" style="position:relative; z-index:1; max-width:900px;" data-aos="fade-up">
-      <h2>Ready to Dominate Your Digital Space?</h2>
-      <p>Partner with TechPulse Media for data-driven digital solutions that deliver measurable growth and ROI for your business.</p>
-      <a href="Contactus.html" class="btn btn-primary btn-lg" data-aos="zoom-in" data-aos-delay="200">
-        Start Your Project <i class="bi bi-arrow-right"></i>
       </a>
     </div>
-  </section>
-</main>
+    <div class="col-md-3" data-aos="flip-left" data-aos-delay="200">
+      <a href="Seo-and-growth.html" class="service-card-wrapper">
+        <div class="service-card bg-blue">
+          <i class="bi bi-bar-chart-line"></i>
+          <h5>SEO & Growth</h5>
+          <span>Learn More →</span>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-3" data-aos="flip-left" data-aos-delay="300">
+      <a href="uiux.html" class="service-card-wrapper">
+        <div class="service-card bg-orange">
+          <i class="bi bi-palette"></i>
+          <h5>UI / UX Design</h5>
+          <span>Learn More →</span>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-3" data-aos="flip-left" data-aos-delay="400">
+      <a href="canvaDesign.html" class="service-card-wrapper">
+        <div class="service-card bg-gray">
+          <i class="bi bi-brush"></i>
+          <h5>Canva Design</h5>
+          <span>Learn More →</span>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-3" data-aos="flip-left" data-aos-delay="500"> <a href="Journalism.html" class="service-card-wrapper"> <div class="service-card"> <i class="bi bi-newspaper"></i> <h5>Journalism</h5> <span>Learn More →</span> </div> </a> </div> <div class="col-md-3" data-aos="flip-left" data-aos-delay="600"> <a href="contentwriting.html" class="service-card-wrapper"> <div class="service-card bg-blue"> <i class="bi bi-pencil-square"></i> <h5>Content Writing</h5> <span>Learn More →</span> </div> </a> </div> <div class="col-md-3" data-aos="flip-left" data-aos-delay="700"> <a href="reasearchAnalysis.html" class="service-card-wrapper"> <div class="service-card bg-orange"> <i class="bi bi-search"></i> <h5>Research & Analysis</h5> <span>Learn More →</span> </div> </a> </div> <div class="col-md-3" data-aos="flip-left" data-aos-delay="800"> <a href="articlePublishing.html" class="service-card-wrapper"> <div class="service-card bg-gray"> <i class="bi bi-journal-text"></i> <h5>Article Publishing</h5> <span>Learn More →</span> </div> </a> </div> </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta position-relative py-5" data-aos="fade-up">
+  <div class="container text-center" style="position:relative; z-index:1; max-width:900px;" data-aos="fade-up">
+    <h3>Ready to Elevate Your Brand?</h3>
+    <p>Lets create stunning websites, designs, and content that drive real results for your business.</p>
+    <a href="Contactus.html" class="btn btn-primary btn-lg" data-aos="zoom-in" data-aos-delay="200">
+      Get Started <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
+</section>
 
 <!-- Footer -->
 <footer data-aos="fade-up">
@@ -529,10 +295,10 @@
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
   AOS.init({
-    duration: 1000,   
-    once: true,       
-    offset: 50,       
-    anchorPlacement: 'top-bottom'
+    duration: 1000,   // animation speed
+    once: true,       // ek hi dafa chale
+    offset: 50,       // 50px scroll pe trigger
+    anchorPlacement: 'top-bottom' // viewport ke hisaab se trigger
   });
 
   window.addEventListener('resize', () => {
@@ -542,3 +308,5 @@
 
 </body>
 </html>
+
+
